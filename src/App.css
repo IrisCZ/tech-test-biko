@@ -1,16 +1,5 @@
 .App {
-  text-align: center;
+  box-sizing: border-box;
   min-height: 100vh;
-}
-
-.home__header {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  padding: 1rem;
-}
-
-.home__header__img {
-  margin-right: 1rem;
-  max-width: 2rem;
+  padding: 2rem;
 }

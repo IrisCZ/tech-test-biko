@@ -1,7 +1,7 @@
+import { BrowserRouter as Router } from "react-router-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
-import { mockGet } from "../mocks/server";
+import { mockGet } from "../../mocks/server";
 import { Home } from "./Home";
 
 describe("Home", () => {
@@ -10,7 +10,7 @@ describe("Home", () => {
       return res(ctx.json([]));
     });
 
-    render(<Home />);
+    renderComponent();
     const title = screen.getByText(/floristería dulces pétalos/i);
 
     expect(title).toBeInTheDocument();
@@ -37,7 +37,7 @@ describe("Home", () => {
       );
     });
 
-    render(<Home />);
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByText(/orquídea/i)).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe("Home", () => {
       );
     });
 
-    render(<Home />);
+    renderComponent();
 
     userEvent.type(screen.getByLabelText("search"), "orq");
 
@@ -76,3 +76,11 @@ describe("Home", () => {
     expect(screen.queryByText(/rosa de damasco/i)).not.toBeInTheDocument();
   });
 });
+
+const renderComponent = () => {
+  render(
+    <Router>
+      <Home />
+    </Router>
+  );
+};

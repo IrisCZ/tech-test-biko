@@ -1,12 +1,14 @@
 import styled from "@emotion/styled";
-import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ListItem } from "../domain/ListItem";
-import { GetListItemsUseCase } from "../useCases/GetListItemsUseCase";
-import { GetListItemsByNameUseCase } from "../useCases/GetListItemsByNameUseCase";
+import { ListItem } from "../../domain/ListItem";
+import { GetListItemsUseCase } from "../../useCases/GetListItemsUseCase";
+import { GetListItemsByNameUseCase } from "../../useCases/GetListItemsByNameUseCase";
 import { SearchBar } from "./SearchBar";
+import { Header } from "../../components/Header";
+import { useNavigate } from "react-router";
 
 export const Home: React.FC = () => {
+  const navigate = useNavigate();
   const [listItems, setListItems] = useState<ListItem[]>([]);
   const [filterByName, setFilterByName] = useState("");
 
@@ -22,25 +24,16 @@ export const Home: React.FC = () => {
 
   return (
     <>
-      <Header>
-        <HeaderImg src="flower-icon.png" alt="flower" />
-        <Title variant={"h1"} gutterBottom>
-          Floristería Dulces Pétalos
-        </Title>
-      </Header>
+      <Header />
       <div className="home__list_view">
         <SearchBarContainer>
           <SearchBar onChange={setFilterByName} />
         </SearchBarContainer>
         <ListViewItems>
           {listItems?.map((item) => (
-            <Card key={item.id}>
+            <Card key={item.id} onClick={() => navigate(`/detail/${item.id}`)}>
               <ImgContainer>
-                <CardImg
-                  className="home__list_view__card__img"
-                  src={item.imgUrl}
-                  alt={item.name}
-                />
+                <CardImg src={item.imgUrl} alt={item.name} />
               </ImgContainer>
               <CardTitle>{item.name}</CardTitle>
             </Card>
@@ -50,25 +43,6 @@ export const Home: React.FC = () => {
     </>
   );
 };
-
-const Title = styled(Typography)`
-  display: inline-block;
-  font-size: 1.4rem;
-  font-weight: 300;
-  line-height: 2rem;
-`;
-
-const Header = styled.header`
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  margin-bottom: 1rem;
-`;
-
-const HeaderImg = styled.img`
-  margin-right: 1rem;
-  max-width: 2rem;
-`;
 
 const ListViewItems = styled.div`
   --n: 5; /* The maximum number of columns */

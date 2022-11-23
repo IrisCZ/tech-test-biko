@@ -1,6 +1,12 @@
-# Getting Started with Create React App
+I've started the project with create-react-app, developed it with React and Typescript and tested it with react-testing-library.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Used libraries
+
+MSW to mock API calls in tests.
+
+MUI to style components.
+
+react-router to handle navigation.
 
 ## Available Scripts
 

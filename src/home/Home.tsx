@@ -3,25 +3,35 @@ import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ListItem } from "../domain/ListItem";
 import { GetListItemsUseCase } from "../useCases/GetListItemsUseCase";
+import { GetListItemsByNameUseCase } from "../useCases/GetListItemsByNameUseCase";
+import { SearchBar } from "./SearchBar";
 
 export const Home: React.FC = () => {
   const [listItems, setListItems] = useState<ListItem[]>([]);
+  const [filterByName, setFilterByName] = useState("");
 
   useEffect(() => {
-    new GetListItemsUseCase().execute().then((data) => {
+    async function run() {
+      const data = filterByName?.length
+        ? await new GetListItemsByNameUseCase().execute(filterByName)
+        : await new GetListItemsUseCase().execute().then((data) => data);
       setListItems(data);
-    });
-  }, []);
+    }
+    run();
+  }, [filterByName]);
 
   return (
     <>
       <Header>
         <HeaderImg src="flower-icon.png" alt="flower" />
-        <Title variant={"h5"} gutterBottom>
+        <Title variant={"h1"} gutterBottom>
           Floristería Dulces Pétalos
         </Title>
       </Header>
       <div className="home__list_view">
+        <SearchBarContainer>
+          <SearchBar onChange={setFilterByName} />
+        </SearchBarContainer>
         <ListViewItems>
           {listItems?.map((item) => (
             <Card key={item.id}>
@@ -43,14 +53,16 @@ export const Home: React.FC = () => {
 
 const Title = styled(Typography)`
   display: inline-block;
+  font-size: 1.4rem;
   font-weight: 300;
+  line-height: 2rem;
 `;
 
 const Header = styled.header`
   display: flex;
   align-items: flex-start;
   flex-direction: row;
-  padding: 1rem;
+  margin-bottom: 1rem;
 `;
 
 const HeaderImg = styled.img`
@@ -59,11 +71,14 @@ const HeaderImg = styled.img`
 `;
 
 const ListViewItems = styled.div`
+  --n: 5; /* The maximum number of columns */
   display: grid;
   gap: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(max(200px, 100% / var(--n)), 1fr)
+  );
   height: 100%;
-  width: 100%;
 `;
 
 const Card = styled.div`
@@ -90,4 +105,11 @@ const CardImg = styled.img`
 
 const CardTitle = styled.p`
   margin: 1rem;
+`;
+
+const SearchBarContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+  width: 100%;
 `;
